@@ -1,8 +1,20 @@
-// const { default: mongoose } = require("mongoose");
+const mongoose = require('mongoose');
 
-const { connect , connection } = require(mongoose);
-const connectionString = 'mogodb://127.0.0.1:27017/socialNtAPI';
+const connectionString = 'mongodb://localhost:27017/socialNetworkDB'; // Update with your actual connection string
 
-connect(connectionString);
+mongoose.connect(connectionString, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+});
 
-module.exports = connection;
+const db = mongoose.connection;
+
+db.on('error', (err) => {
+  console.error('MongoDB connection error:', err);
+});
+
+db.once('open', () => {
+  console.log('Connected to MongoDB!');
+});
+
+module.exports = db;
