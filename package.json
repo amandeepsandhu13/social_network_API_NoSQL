@@ -1,12 +1,12 @@
 {
   "name": "social_network_api_nosql",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "server.js",
   "author": "",
   "license": "MIT",
   "scripts": {
-    "start": "node index",
-    "dev": "nodemon index",
+    "start": "node server",
+    "dev": "nodemon server",
     "seed": "node utils/seed"
   },
   "dependencies": {
