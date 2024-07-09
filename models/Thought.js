@@ -34,6 +34,16 @@ thoughtSchema.virtual('reactionCount').get(function () {
   return this.reactions.length;
 });
 
+// Middleware to delete reactions when a thought is deleted
+thoughtSchema.pre('remove', async function (next) {
+  try {
+    await this.model('Reaction').deleteMany({ thoughtId: this._id });
+    next();
+  } catch (err) {
+    next(err);
+  }
+});
+
 const Thought = model('Thought', thoughtSchema);
 
 module.exports = Thought;

@@ -40,6 +40,16 @@ userSchema.virtual('friendCount').get(function () {
   return this.friends.length;
 });
 
+// Middleware to delete associated thoughts when a user is deleted
+userSchema.pre('remove', async function (next) {
+  try {
+    await Thought.deleteMany({ username: this.username });
+    next();
+  } catch (err) {
+    next(err);
+  }
+});
+
 // Initialize our User model
 const User = model('User', userSchema);
 
