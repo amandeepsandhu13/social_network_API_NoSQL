@@ -38,16 +38,22 @@ module.exports = {
       )
       .catch((err) => res.status(500).json(err));
   },
-  // Delete a user by ID
-  deleteUser(req, res) {
-    User.findOneAndDelete({ _id: req.params.userId })
-      .then((user) => 
-        !user
-          ? res.status(404).json({ message: 'No user with that ID' })
-          : Thought.deleteMany({ _id: { $in: user.thoughts } })
-      )
-      .then(() => res.json({ message: 'User and associated thoughts deleted!' }))
-      .catch((err) => res.status(500).json(err));
+// Delete a user and their thoughts
+async deleteUser(req, res) {
+    try {
+      const user = await User.findOneAndDelete({ _id: req.params.userId });
+
+      if (!user) {
+        return res.status(404).json({ message: 'No user with this ID' });
+      }
+
+      // Delete all thoughts associated with the user
+      await Thought.deleteMany({ username: user.username });
+
+      res.json({ message: 'User and associated thoughts deleted!' });
+    } catch (err) {
+      res.status(500).json(err);
+    }
   },
   // Add a friend to a user
   addFriend(req, res) {
